@@ -1,0 +1,32 @@
+﻿@model IEnumerable<CarApp.Models.Car>
+
+<h2>Car List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Year</th>
+            <th>Image</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in Model)
+        {
+            <tr>
+                <td>@car.Make</td>
+                <td>@car.Model</td>
+                <td>@car.Year</td>
+                <td><img src="@car.ImagePath" alt="Car Image" width="100" /></td>
+                <td>
+                    <a href="@Url.Action("Edit", "Cars", new { id = car.Id })">Edit</a> |
+                    <a href="@Url.Action("Delete", "Cars", new { id = car.Id })">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Create", "Cars")">Add New Car</a>
