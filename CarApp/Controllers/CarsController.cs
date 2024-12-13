@@ -1,84 +1,53 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using CarApp.ApplicationServices;
+using CarApp.Models; 
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CarApp.Models;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace CarApp.Controllers
 {
     public class CarsController : Controller
     {
-        private readonly CarDbContext _context;
-        private readonly IWebHostEnvironment _environment;
+        private readonly CarService _carService;
 
-        public CarsController(CarDbContext context, IWebHostEnvironment environment)
+        public CarsController(CarService carService)
         {
-            _context = context;
-            _environment = environment;
+            _carService = carService;
         }
 
-        // GET: Cars
         public async Task<IActionResult> Index()
         {
-            return View("CRUD/Index", await _context.Cars.ToListAsync());
+            var cars = await _carService.GetAllCarsAsync();
+            return View(cars);
         }
 
-        // GET: Cars/Create
         public IActionResult Create()
         {
-            return View("CRUD/Create");
+            return View();
         }
 
-        // POST: Cars/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Car car, IFormFile image)
+        public async Task<IActionResult> Create(Car car)
         {
             if (ModelState.IsValid)
             {
-                if (image != null && image.Length > 0)
-                {
-                    var filePath = Path.Combine(_environment.WebRootPath, "images", image.FileName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await image.CopyToAsync(stream);
-                    }
-                    car.ImagePath = "/images/" + image.FileName;
-                }
-
-                car.CreatedAt = DateTime.Now;
-                car.ModifiedAt = DateTime.Now;
-
-                _context.Add(car);
-                await _context.SaveChangesAsync();
+                await _carService.AddCarAsync(car);
                 return RedirectToAction(nameof(Index));
             }
-            return View("CRUD/Create", car);
+            return View(car);
         }
 
-        // GET: Cars/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var car = await _context.Cars.FindAsync(id);
+            var car = await _carService.GetCarByIdAsync(id);
             if (car == null)
             {
                 return NotFound();
             }
-            return View("CRUD/Edit", car);
+            return View(car);
         }
 
-        // POST: Cars/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Car car, IFormFile image)
+        public async Task<IActionResult> Edit(int id, Car car)
         {
             if (id != car.Id)
             {
@@ -87,64 +56,20 @@ namespace CarApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    if (image != null && image.Length > 0)
-                    {
-                        var filePath = Path.Combine(_environment.WebRootPath, "images", image.FileName);
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await image.CopyToAsync(stream);
-                        }
-                        car.ImagePath = "/images/" + image.FileName;
-                    }
-
-                    car.ModifiedAt = DateTime.Now;
-                    _context.Update(car);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Cars.Any(c => c.Id == car.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _carService.UpdateCarAsync(car);
                 return RedirectToAction(nameof(Index));
             }
-            return View("CRUD/Edit", car);
+            return View(car);
         }
 
-        // GET: Cars/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var car = await _context.Cars
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var car = await _carService.GetCarByIdAsync(id);
             if (car == null)
             {
                 return NotFound();
             }
-
-            return View("CRUD/Delete", car);
-        }
-
-        // POST: Cars/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var car = await _context.Cars.FindAsync(id);
-            _context.Cars.Remove(car);
-            await _context.SaveChangesAsync();
+            await _carService.DeleteCarAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }

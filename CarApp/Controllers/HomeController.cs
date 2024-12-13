@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using CarApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CarApp.Controllers
 {
