@@ -1,44 +1,28 @@
-﻿using CarApp.Data;
-using CarApp.Models;
+﻿using CarApp.Core.Domain;
 using CarApp.Core.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
+using CarApp.Core.ServiceInterface;
+using CarApp.Data;
 
-
-namespace CarApp.ApplicationServices
+namespace CarApp.ApplicationServices.Services
 {
     public class CarAppServices : ICarAppServices
     {
-        private readonly ICarRepository _carRepository;
+        private readonly CarAppContext _context;
 
-        public CarAppServices(ICarRepository carRepository)
+        public CarAppServices(CarAppContext context)
         {
-            _carRepository = carRepository;
+            _context = context;
         }
 
-        public async Task<IEnumerable<Car>> GetAllCarsAsync()
+        public IEnumerable<Car> GetAllCars()
         {
-            return await _carRepository.GetAllCarsAsync();
+            return _context.Cars.ToList();
         }
 
-        public async Task<Car> GetCarByIdAsync(int id)
+        public void AddCar(Car car)
         {
-            return await _carRepository.GetCarByIdAsync(id);
-        }
-
-        public async Task AddCarAsync(Car car)
-        {
-            await _carRepository.AddCarAsync(car);
-        }
-
-        public async Task UpdateCarAsync(Car car)
-        {
-            await _carRepository.UpdateCarAsync(car);
-        }
-
-        public async Task DeleteCarAsync(int id)
-        {
-            await _carRepository.DeleteCarAsync(id);
+            _context.Cars.Add(car);
+            _context.SaveChanges();
         }
     }
 }

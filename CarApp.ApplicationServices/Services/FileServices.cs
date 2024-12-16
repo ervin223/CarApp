@@ -1,35 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System.IO;
-using System.Threading.Tasks;
+using CarApp.Core.ServiceInterface;
+using CarApp.Core.ServiceInterfaces;
 
-namespace CarApp.ApplicationServices
+namespace CarApp.ApplicationServices.Services
 {
     public class FileServices : IFileServices
     {
-        private readonly string _uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-
-        public FileServices()
+        public string UploadFile(IFormFile file)
         {
-            if (!Directory.Exists(_uploadFolder))
-            {
-                Directory.CreateDirectory(_uploadFolder);
-            }
-        }
-
-        public async Task<string> SaveFileAsync(IFormFile file)
-        {
-            var filePath = Path.Combine(_uploadFolder, file.FileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(fileStream);
-            }
+            var filePath = Path.Combine("uploads", file.FileName);
+            using var stream = new FileStream(filePath, FileMode.Create);
+            file.CopyTo(stream);
             return filePath;
-        }
-
-        public bool FileExists(string fileName)
-        {
-            var filePath = Path.Combine(_uploadFolder, fileName);
-            return File.Exists(filePath);
         }
     }
 }

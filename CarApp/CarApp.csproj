@@ -17,4 +17,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CarApp.ApplicationServices\CarApp.ApplicationServices.csproj" />
+    <ProjectReference Include="..\ClassLibrary1\CarApp.Core.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,4 @@
-﻿using CarApp.Models;
+﻿using CarApp.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
@@ -6,7 +6,10 @@ namespace CarApp.Data
 {
     public class CarAppContext : DbContext
     {
-        public CarAppContext(DbContextOptions<CarAppContext> options) : base(options) { }
+        public CarAppContext(DbContextOptions<CarAppContext> options)
+            : base(options)
+        {
+        }
 
         public DbSet<Car> Cars { get; set; }
     }

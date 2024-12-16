@@ -1,15 +1,10 @@
-﻿using CarApp.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using CarApp.Core.Domain;
 
-namespace CarApp.Core.Interfaces
+namespace CarApp.Core.ServiceInterface
 {
     public interface ICarAppServices
     {
-        Task<IEnumerable<Car>> GetAllCarsAsync();
-        Task<Car> GetCarByIdAsync(int id);
-        Task AddCarAsync(Car car);
-        Task UpdateCarAsync(Car car);
-        Task DeleteCarAsync(int id);
+        IEnumerable<Car> GetAllCars();
+        void AddCar(Car car);
     }
 }

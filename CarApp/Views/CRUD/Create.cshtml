@@ -1,27 +1,23 @@
-﻿@model CarApp.Models.Car
+﻿@model CarApp.Core.Domain.Car
 
 <h2>Create Car</h2>
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label asp-for="Make" class="control-label"></label>
-        <input asp-for="Make" class="form-control" />
+<form asp-action="Create" method="post">
+    <div>
+        <label>Make:</label>
+        <input asp-for="Make" />
     </div>
-    <div class="form-group">
-        <label asp-for="Model" class="control-label"></label>
-        <input asp-for="Model" class="form-control" />
+    <div>
+        <label>Model:</label>
+        <input asp-for="Model" />
     </div>
-    <div class="form-group">
-        <label asp-for="Year" class="control-label"></label>
-        <input asp-for="Year" class="form-control" />
+    <div>
+        <label>Year:</label>
+        <input asp-for="Year" />
     </div>
-    <div class="form-group">
-        <label asp-for="Description" class="control-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
+    <div>
+        <label>Color:</label>
+        <input asp-for="Color" />
     </div>
-    <div class="form-group">
-        <label>Car Image</label>
-        <input type="file" name="image" />
-    </div>
-    <button type="submit" class="btn btn-primary">Create</button>
+    <button type="submit">Create</button>
 </form>

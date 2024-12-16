@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
 
-namespace CarApp.Core.Interfaces
+namespace CarApp.Core.ServiceInterface
 {
     public interface IFileServices
     {
-        Task<string> SaveFileAsync(IFormFile file);
-        bool FileExists(string fileName);
+        string UploadFile(IFormFile file);
     }
 }
